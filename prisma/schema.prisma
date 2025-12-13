@@ -1,0 +1,38 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Tá dando um ‘erro’ que, na verdade, é só um aviso e não vai interferir
+datasource db {
+  provider = "sqlite"
+  url      = "file:./banco.db"
+}
+
+model Benefit {
+  id    String   @id @default(uuid())
+  name  String   @unique
+  products Product[]
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  price       Float
+  category    String
+  description String?
+  image       String
+  benefitId   String
+  benefit     Benefit @relation(fields: [benefitId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model UserInfo {
+  id         String      @id @default(uuid())
+  name       String
+  email      String
+  cpf        String
+  phone      String
+}
