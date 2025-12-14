@@ -1,7 +1,10 @@
+// g:/DESK-EDSON/dev/lumina-essence-v2/AdminFormProduct.tsx
 import React, { useState } from "react";
+import { createProduct } from "./productService";   // ← novo import
 import ProductForm from "./ProductForm";
 import { Product } from "./types";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const initialProducts: Product[] = [];
 
@@ -18,19 +21,43 @@ const AdminProductsPage: React.FC = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
 
-  const handleAddProduct = (product: Product) => {
-    setProducts([...products, product]);
+  // ---------- CREATE ----------
+  const handleAddProduct = async (product: Product) => {
+    const navigate = useNavigate();
+
+    try {
+      const newProduct = await createProduct({
+        name: product.name,
+        price: product.price,
+        category: product.category,
+        description: product.description,
+        image: product.image,
+        benefitId: undefined, // opcional – service cria padrão se necessário
+      });
+      setProducts(prev => [...prev, newProduct]);
+      toast.success("Produto cadastrado com sucesso!");
+      setTimeout(() => navigate("/admin/products"), 1000);
+      
+    } catch (err) {
+      toast.error("Falha ao cadastrar produto:", err);
+      console.error("❌ Falha ao cadastrar produto:", err);
+    }
   };
 
+  // ---------- EDIT ----------
   const handleEditProduct = (product: Product) => {
-    setProducts(products.map((p) => (p.id === product.id ? product : p)));
+    setProducts(prev =>
+      prev.map(p => (p.id === product.id ? product : p))
+    );
     setEditingProduct(null);
   };
 
-  const handleDeleteProduct = (id: number) => {
-    setProducts(products.filter((p) => p.id !== id));
+  // ---------- DELETE ----------
+  const handleDeleteProduct = (id: string) => {
+    setProducts(prev => prev.filter(p => p.id !== id));
   };
 
+  // ---------- RENDER ----------
   return (
     <>
       {/* Navigation */}

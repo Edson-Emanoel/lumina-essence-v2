@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Product } from "./types";
 import { useNavigate, Link } from "react-router-dom";
+import { getProducts } from "./productService";
 
 const AdminPage = () => {
   const navigate = useNavigate();
@@ -15,7 +16,19 @@ const AdminPage = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
 
-  const handleDeleteProduct = (id: number) => {
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await getProducts();
+        setProducts(data);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  const handleDeleteProduct = (id: string) => {
     setProducts(products.filter((p) => p.id !== id));
   };
 
@@ -104,7 +117,7 @@ const AdminPage = () => {
           Cadastrar Novo Produto
         </button>
 
-        <ul className="list-none p-0 bg-red-500 w-full max-w-4xl mx-auto">
+        <ul className="list-none p-0 w-full max-w-4xl mx-auto">
           {products.map((product) => (
             <li
               key={product.id}
@@ -149,7 +162,7 @@ const AdminPage = () => {
                     >
                       Editar
                     </button>
-                    <button onClick={() => handleDeleteProduct(product.id)}>
+                    <button onClick={() => handleDeleteProduct(product.id!)}>
                       Deletar
                     </button>
                   </div>
