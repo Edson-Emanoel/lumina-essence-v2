@@ -1,20 +1,17 @@
+
 import React, { useEffect, useState } from "react";
 import { Product } from "./types";
 import { useNavigate, Link } from "react-router-dom";
-import { getProducts } from "./productService";
+import { getProducts, deleteProduct } from "./productService";
+import { toast } from "sonner";
 
 const AdminPage = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const isAdmin = true;
 
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [adminPassword] = useState("123456789");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -22,14 +19,22 @@ const AdminPage = () => {
         const data = await getProducts();
         setProducts(data);
       } catch (error) {
-        console.error("Failed to fetch products:", error);
+        console.error("Erro ao buscar produtos:", error);
       }
     };
     fetchProducts();
   }, []);
 
-  const handleDeleteProduct = (id: string) => {
-    setProducts(products.filter((p) => p.id !== id));
+  const handleDeleteProduct = async (id: string) => {
+    if (!confirm("Tem certeza que deseja excluir este produto?")) return;
+    try {
+      await deleteProduct(id);
+      toast.success("Produto excluído com sucesso");
+      setProducts(products.filter((p) => p.id !== id));
+    } catch (error) {
+      console.error("Failed to delete product:", error);
+      toast.error("Erro ao deletar produto");
+    }
   };
 
   const handleNavigate = () => {
@@ -62,8 +67,7 @@ const AdminPage = () => {
                 className={`text-sm font-medium text-stone-600 hover:text-brand-600 transition ${
                   isButtonDisabled ? "opacity-50 cursor-not-allowed" : ""
                 }`}
-                onClick={() => setShowPasswordModal(true)}
-                disabled={isButtonDisabled}
+                onClick={() => navigate("/admin/products")}
               >
                 Administração de Produtos
               </button>
@@ -76,104 +80,113 @@ const AdminPage = () => {
               >
                 <span>Assistente Virtual</span>
               </button>
-
-              <button
-                className="relative p-2 hover:bg-stone-50 rounded-full transition"
-                onClick={() => setIsCartOpen(true)}
-              >
-                <svg
-                  className="w-6 h-6 text-stone-700"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                  />
-                </svg>
-                {cartCount > 0 && (
-                  <span className="absolute top-0 right-0 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-brand-600 rounded-full">
-                    {cartCount}
-                  </span>
-                )}
-              </button>
             </div>
           </div>
         </div>
       </nav>
 
-      <div className="flex flex-col items-center px-24 py-8">
-        <h2 className="text-xl font-semibold mt-4 text-center">
-          Produtos cadastrados
-        </h2>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-serif font-bold text-stone-800">
+            Produtos Cadastrados
+          </h2>
+          <button
+            onClick={handleNavigate}
+            className="bg-brand-600 text-white px-3 py-2.5 rounded-md font-medium shadow-lg shadow-brand-200 hover:bg-brand-700 hover:shadow-xl transition-all duration-300 flex items-center gap-2"
+          >
+            Cadastrar Novo Produto
+          </button>
+        </div>
 
-        <button
-          onClick={handleNavigate}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4 mb-4 self-end"
-        >
-          Cadastrar Novo Produto
-        </button>
-
-        <ul className="list-none p-0 w-full max-w-4xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {products.map((product) => (
-            <li
+            <div
               key={product.id}
-              style={{
-                marginBottom: 16,
-                border: "1px solid #ccc",
-                borderRadius: 8,
-                padding: 12,
-              }}
+              className="group bg-white rounded-xl shadow-sm border border-stone-100 overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
             >
-              <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                {product.image && (
+              <div className="relative aspect-[4/3] overflow-hidden bg-stone-100 rounded-t-xl">
+                {product.image ? (
                   <img
                     src={product.image}
                     alt={product.name}
-                    style={{
-                      width: 64,
-                      height: 64,
-                      objectFit: "cover",
-                      borderRadius: 8,
-                    }}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-stone-400">
+                    <span className="text-2xl">📷</span>
+                  </div>
                 )}
-                <div style={{ flex: 1 }}>
-                  <strong>{product.name}</strong> <br />
-                  <span>R$ {product.price.toFixed(2)}</span> <br />
-                  <span>Categoria: {product.category}</span> <br />
-                  <span>{product.description}</span> <br />
-                  {product.benefits && product.benefits.length > 0 && (
-                    <ul style={{ margin: "4px 0", paddingLeft: 16 }}>
-                      {product.benefits.map((b, i) => (
-                        <li key={i}>{b}</li>
-                      ))}
-                    </ul>
-                  )}
+                <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-full text-[10px] font-bold text-brand-700 shadow-sm">
+                  {product.category}
                 </div>
+              </div>
+
+              <div className="p-3">
+                <div className="flex justify-between items-start mb-1">
+                  <h3 className="text-sm font-bold text-stone-800 line-clamp-1">
+                    {product.name}
+                  </h3>
+                  <span className="text-sm font-bold text-brand-600">
+                    R$ {product.price.toFixed(2)}
+                  </span>
+                </div>
+                
+                <p className="text-stone-500 text-xs mb-2 line-clamp-2 min-h-[2rem]">
+                  {product.description}
+                </p>
+
+                {product.benefits && product.benefits.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mb-3">
+                    {product.benefits.slice(0, 2).map((b, i) => (
+                      <span 
+                        key={i}
+                        className="text-[9px] uppercase tracking-wider font-bold text-stone-500 bg-stone-100 px-1.5 py-0.5 rounded"
+                      >
+                        {b}
+                      </span>
+                    ))}
+                    {product.benefits.length > 2 && (
+                      <span className="text-[9px] text-stone-400 py-0.5">+ {product.benefits.length - 2}</span>
+                    )}
+                  </div>
+                )}
+
                 {isAdmin && (
-                  <div>
+                  <div className="flex gap-2 mt-auto pt-2 border-t border-stone-100">
                     <button
-                      onClick={() => setEditingProduct(product)}
-                      style={{ marginRight: 8 }}
+                      onClick={() => navigate("/admin/new/product", { state: { product } })}
+                      className="flex-1 px-2 py-1 bg-stone-50 text-stone-600 rounded text-xs font-medium hover:bg-brand-50 hover:text-brand-600 transition-colors"
                     >
                       Editar
                     </button>
-                    <button onClick={() => handleDeleteProduct(product.id!)}>
-                      Deletar
+                    <button 
+                      onClick={() => handleDeleteProduct(product.id!)}
+                      className="flex-1 px-2 py-1 bg-red-50 text-red-600 rounded text-xs font-medium hover:bg-red-100 transition-colors"
+                    >
+                      Excluir
                     </button>
                   </div>
                 )}
               </div>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
+        
+        {products.length === 0 && (
+          <div className="text-center py-20 bg-stone-50 rounded-3xl border border-dashed border-stone-200">
+            <p className="text-stone-400 text-lg mb-4">Nenhum produto cadastrado ainda.</p>
+            <button
+              onClick={handleNavigate}
+              className="text-brand-600 font-medium hover:underline"
+            >
+              Cadastre o primeiro produto
+            </button>
+          </div>
+        )}
       </div>
     </>
   );
 };
 
 export default AdminPage;
+

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Product } from "./types";
 import { useNavigate } from "react-router-dom";
 
@@ -26,20 +26,30 @@ const ProductForm: React.FC<ProductFormProps> = ({
   const [benefits, setBenefits] = useState(
     initialProduct?.benefits?.join(", ") || ""
   );
-  // States do App.tsx para navegação/admin/modal
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [passwordInput, setPasswordInput] = useState("");
-  const [adminPassword] = useState("123456789"); // senha fixa
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    if (initialProduct) {
+      setName(initialProduct.name);
+      setPrice(initialProduct.price.toString());
+      setCategory(initialProduct.category);
+      setDescription(initialProduct.description);
+      setImage(initialProduct.image);
+      setBenefits(initialProduct.benefits?.join(", ") || "");
+    } else {
+      setName("");
+      setPrice("");
+      setCategory("");
+      setDescription("");
+      setImage("");
+      setBenefits("");
+    }
+  }, [initialProduct]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !price) return;
     onSubmit({
-      id: initialProduct?.id || Date.now(),
+      id: initialProduct?.id || Date.now().toString(),
       name,
       price: Number(price),
       category,
@@ -58,10 +68,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
     setBenefits("");
   };
 
-  const handleNavigateBack = () => {
-    navigate(-1);
-  };
-
   return (
     <>
       <form
@@ -70,13 +76,16 @@ const ProductForm: React.FC<ProductFormProps> = ({
       >
         <button
           className="w-fit px-3 py-1.5 bg-stone-200 rounded-md"
-          onClick={handleNavigateBack}
+          onClick={() => navigate("/admin/products")}
+          type="button"
         >
           Voltar
         </button>
+        
         <h2 className="text-xl font-semibold text-center">
           {editingProduct ? "Editar Produto" : "Cadastrar Produto"}
         </h2>
+
         <div className="flex flex-col gap-2">
           <label className="font-medium text-stone-700">Nome do produto</label>
           <input
@@ -168,3 +177,4 @@ const ProductForm: React.FC<ProductFormProps> = ({
 };
 
 export default ProductForm;
+

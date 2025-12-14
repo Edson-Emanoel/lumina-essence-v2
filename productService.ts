@@ -1,7 +1,3 @@
-// g:/DESK-EDSON/dev/lumina-essence-v2/productService.ts
-// Service layer that communicates with the backend Express server (server.ts).
-// The backend runs Prisma; the frontend only uses fetch.
-
 export interface ProductPayload {
   name: string;
   price: number;
@@ -9,6 +5,7 @@ export interface ProductPayload {
   description?: string;
   image: string;
   benefitId?: string;
+  benefits?: string[];
 }
 
 /** Create a new product */
@@ -31,6 +28,32 @@ export async function getProducts() {
   if (!response.ok) {
     const err = await response.text();
     throw new Error(`Failed to fetch products: ${response.status} ${err}`);
+  }
+  return await response.json();
+}
+
+/** Delete a product */
+export async function deleteProduct(id: string) {
+  const response = await fetch(`http://localhost:4000/api/products/${id}`, {
+    method: 'DELETE',
+  });
+  if (!response.ok) {
+    const err = await response.text();
+    throw new Error(`Failed to delete product: ${response.status} ${err}`);
+  }
+  return true;
+}
+
+/** Update a product */
+export async function updateProduct(id: string, data: ProductPayload) {
+  const response = await fetch(`http://localhost:4000/api/products/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) {
+    const err = await response.text();
+    throw new Error(`Failed to update product: ${response.status} ${err}`);
   }
   return await response.json();
 }

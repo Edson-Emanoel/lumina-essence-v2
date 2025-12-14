@@ -4,6 +4,7 @@ import App from './App';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import AdminProductsPage from './AdminFormProduct';
 import AdminPage from './AdminPage';
+import { Toaster } from 'sonner';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
+    <Toaster position="bottom-right" richColors />
     <RouterProvider router={router} />
   </React.StrictMode>
 );
