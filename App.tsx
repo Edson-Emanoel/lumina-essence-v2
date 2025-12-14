@@ -115,7 +115,7 @@ export default function App() {
             {/* "TITULO" */}
             <div className="flex items-center gap-2">
                 <span className="text-2xl">✨</span>
-                <h1 className="font-serif text-2xl font-bold bg-gradient-to-r from-brand-700 to-brand-500 bg-clip-text text-transparent">
+                <h1 className=" text-2xl font-bold bg-gradient-to-r from-brand-700 to-brand-500 bg-clip-text text-transparent">
                   Lumina Essence
                 </h1>
             </div>
@@ -171,7 +171,7 @@ export default function App() {
           <div className="absolute inset-0 bg-gradient-to-r from-brand-900/80 to-transparent"></div>
         </div>
         <div className="relative max-w-7xl mx-auto px-4 py-24 sm:px-6 lg:px-8 flex flex-col justify-center min-h-[400px]">
-          <h2 className="font-serif text-4xl md:text-6xl font-bold mb-6 max-w-2xl">
+          <h2 className=" text-4xl md:text-6xl font-bold mb-6 max-w-2xl">
             Descubra sua beleza natural
           </h2>
           <p className="text-lg text-stone-200 max-w-xl mb-8 font-light">
@@ -223,7 +223,7 @@ export default function App() {
                   </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="font-serif text-xl font-bold text-stone-900 mb-2">{product.name}</h3>
+                  <h3 className=" text-xl font-bold text-stone-900 mb-2">{product.name}</h3>
                   <p className="text-stone-500 text-sm mb-4 line-clamp-2">{product.description}</p>
                   <div className="flex flex-wrap gap-2 mb-6">
                       {product.benefits.slice(0,2).map((b, i) => (
@@ -252,7 +252,7 @@ export default function App() {
       {/* Footer */}
       <footer className="bg-stone-50 border-t border-stone-200 mt-12 py-12">
         <div className="max-w-7xl mx-auto px-4 text-center">
-            <h2 className="font-serif text-2xl font-bold text-brand-800 mb-4">Lumina Essence</h2>
+            <h2 className=" text-2xl font-bold text-brand-800 mb-4">Lumina Essence</h2>
             <p className="text-stone-500 mb-8">Elevando sua rotina de beleza com produtos selecionados.</p>
             <p className="text-xs text-stone-400">© 2024 Lumina Essence. Todos os direitos reservados.</p>
         </div>
@@ -264,7 +264,7 @@ export default function App() {
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 transition-opacity" onClick={() => setIsCartOpen(false)} />
           <div className="fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl z-50 transform transition-transform duration-300 flex flex-col">
             <div className="p-6 border-b border-stone-100 flex justify-between items-center bg-stone-50">
-              <h2 className="font-serif text-xl font-bold text-stone-800">Seu Carrinho ({cartCount})</h2>
+              <h2 className=" text-xl font-bold text-stone-800">Seu Carrinho ({cartCount})</h2>
               <button onClick={() => setIsCartOpen(false)} className="text-stone-400 hover:text-stone-600">
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

@@ -80,7 +80,7 @@ const AdminProductsPage: React.FC = () => {
           <div className="flex justify-between items-center h-20">
             <div className="flex items-center gap-2">
               <span className="text-2xl">✨</span>
-              <h1 className="font-serif text-2xl font-bold bg-gradient-to-r from-brand-700 to-brand-500 bg-clip-text text-transparent">
+              <h1 className=" text-2xl font-bold bg-gradient-to-r from-brand-700 to-brand-500 bg-clip-text text-transparent">
                 Lumina Essence
               </h1>
             </div>

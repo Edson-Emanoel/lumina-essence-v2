@@ -44,61 +44,60 @@ const AdminPage = () => {
   return (
     <>
       {/* Navigation */}
+      {/* Navigation */}
       <nav className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-stone-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
+          <div className="flex justify-between items-center h-16 md:h-20">
             {/* "TITULO" */}
             <div className="flex items-center gap-2">
-              <span className="text-2xl">✨</span>
-              <h1 className="font-serif text-2xl font-bold bg-gradient-to-r from-brand-700 to-brand-500 bg-clip-text text-transparent">
+              <span className="text-xl md:text-2xl">✨</span>
+              <h1 className="text-lg md:text-2xl font-bold bg-gradient-to-r from-brand-700 to-brand-500 bg-clip-text text-transparent truncate">
                 Lumina Essence
               </h1>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4 md:gap-6">
               <Link
                 to="/"
                 className="text-sm font-medium text-stone-600 hover:text-brand-600 transition"
               >
-                <span>Home</span>
+                Home
               </Link>
 
               <button
-                className={`text-sm font-medium text-stone-600 hover:text-brand-600 transition ${
+                className={`hidden md:block text-sm font-medium text-stone-600 hover:text-brand-600 transition ${
                   isButtonDisabled ? "opacity-50 cursor-not-allowed" : ""
                 }`}
                 onClick={() => navigate("/admin/products")}
               >
-                Administração de Produtos
+                Administração
               </button>
-            </div>
 
-            <div className="flex items-center gap-6">
               <button
                 onClick={() => setIsChatOpen(!isChatOpen)}
                 className="hidden md:flex items-center gap-2 text-sm font-medium text-stone-600 hover:text-brand-600 transition"
               >
-                <span>Assistente Virtual</span>
+                <span>Assistente</span>
               </button>
             </div>
           </div>
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl font-serif font-bold text-stone-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-stone-800 text-center md:text-left">
             Produtos Cadastrados
           </h2>
           <button
             onClick={handleNavigate}
-            className="bg-brand-600 text-white px-3 py-2.5 rounded-md font-medium shadow-lg shadow-brand-200 hover:bg-brand-700 hover:shadow-xl transition-all duration-300 flex items-center gap-2"
+            className="w-full md:w-auto bg-brand-600 text-white px-4 py-2.5 rounded-md font-medium shadow-lg shadow-brand-200 hover:bg-brand-700 hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
           >
             Cadastrar Novo Produto
           </button>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {products.map((product) => (
             <div
               key={product.id}

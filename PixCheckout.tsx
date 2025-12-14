@@ -129,7 +129,7 @@ export default function PixCheckout({ cart, total, onClose, onSuccess }: PixChec
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h3 className="text-2xl font-serif text-brand-800 mb-2">Pagamento Confirmado!</h3>
+        <h3 className="text-2xl  text-brand-800 mb-2">Pagamento Confirmado!</h3>
         <p className="text-stone-600">Seu pedido está sendo preparado com carinho.</p>
       </div>
     );
@@ -139,7 +139,7 @@ export default function PixCheckout({ cart, total, onClose, onSuccess }: PixChec
     return (
       <div className="space-y-6">
         <div className="text-center">
-          <h3 className="text-xl font-serif text-brand-800">Pagamento via Pix</h3>
+          <h3 className="text-xl  text-brand-800">Pagamento via Pix</h3>
           <p className="text-sm text-stone-500">Escaneie o QR Code ou copie a chave abaixo</p>
           <div className="text-2xl font-bold text-brand-600 my-2">
             R$ {total.toFixed(2).replace('.', ',')}
@@ -185,7 +185,7 @@ export default function PixCheckout({ cart, total, onClose, onSuccess }: PixChec
   return (
     <form onSubmit={handleGeneratePix} className="space-y-4">
       <div>
-        <h3 className="text-xl font-serif text-brand-800 mb-4">Finalizar Compra</h3>
+        <h3 className="text-xl  text-brand-800 mb-4">Finalizar Compra</h3>
         <p className="text-sm text-stone-600 mb-4">Preencha seus dados para gerar o Pix.</p>
       </div>
 

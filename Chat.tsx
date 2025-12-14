@@ -107,7 +107,7 @@ export default function Chat({ isOpen, onClose }: ChatProps) {
              <span className="text-xl">✨</span>
           </div>
           <div>
-            <h3 className="font-serif font-bold">Lumina Assistant</h3>
+            <h3 className=" font-bold">Lumina Assistant</h3>
             <p className="text-xs text-brand-100 flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span> Online agora
             </p>
