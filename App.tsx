@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { PRODUCTS } from './constants';
+import React, { useState, useEffect } from 'react';
+import { getProducts } from './productService';
 import { Product, CartItem } from './types';
 import Chat from './Chat';
 import PixCheckout from './PixCheckout';
@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 export default function App() {
   const navigate = useNavigate();
+  const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -16,6 +17,10 @@ export default function App() {
   const [passwordInput, setPasswordInput] = useState('');
   const [adminPassword] = useState('123456789'); // senha fixa
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+  useEffect(() => {
+    getProducts().then(setProducts).catch(console.error);
+  }, []);
 
   function validateAdminPassword(password: string) {
     if (password === adminPassword) {
@@ -44,11 +49,13 @@ export default function App() {
     setIsCartOpen(true);
   };
 
-  const removeFromCart = (id: number) => {
+  const removeFromCart = (id?: string) => {
+    if (!id) return;
     setCart(prev => prev.filter(item => item.id !== id));
   };
 
-  const updateQuantity = (id: number, delta: number) => {
+  const updateQuantity = (id: string | undefined, delta: number) => {
+    if (!id) return;
     setCart(prev => prev.map(item => {
       if (item.id === id) {
         const newQty = Math.max(1, item.quantity + delta);
@@ -67,10 +74,10 @@ export default function App() {
   const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-  const categories = ['Todos', ...Array.from(new Set(PRODUCTS.map(p => p.category)))];
+  const categories = ['Todos', ...Array.from(new Set(products.map(p => p.category)))];
   const filteredProducts = categoryFilter === 'Todos' 
-    ? PRODUCTS 
-    : PRODUCTS.filter(p => p.category === categoryFilter);
+    ? products 
+    : products.filter(p => p.category === categoryFilter);
 
   return (
     <div className="min-h-screen flex flex-col font-sans text-stone-800">
